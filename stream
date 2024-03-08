@@ -1,0 +1,62 @@
+{
+  "index_lifecycle_policy": {
+    "name": "g-policy",
+    "phases": {
+      "hot": {
+        "actions": {
+          "rollover": {
+            "max_size": "20mb"
+          }
+        }
+      },
+      "delete": {
+        "min_age": "12h",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  },
+  "index_template": {
+    "name": "g-tmp",
+    "patterns": ["g-*"],
+    "data_stream": {},
+    "priority": 500,
+    "template": {
+      "settings": {
+        "index.lifecycle.name": "g-policy"
+      },
+      "mappings": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          }
+        }
+      }
+    }
+  },
+  "sample_documents": [
+    {
+      "index": "g-test-1",
+      "document": {
+        "@timestamp": "2021-04-07T12:02:15.000Z",
+        "message": "Hello world"
+      }
+    },
+    {
+      "index_template": "g-tmp",
+      "id": "my-id",
+      "document": {
+        "@timestamp": "2021-04-07T12:02:15.000Z",
+        "message": "I just set the ID of this document"
+      }
+    },
+    {
+      "index": "g-test-1",
+      "document": {
+        "@timestamp": "2022-03-08T14:30:00.000Z",
+        "message": "This is an example log entry."
+      }
+    }
+  ]
+}
